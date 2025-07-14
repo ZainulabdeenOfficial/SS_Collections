@@ -1,11 +1,14 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/lib/auth-context"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
 import { Package, Users, ShoppingCart, DollarSign, AlertTriangle } from "lucide-react"
 import { Database } from "@/lib/neon-db"
+import { AmazingLoader } from "@/components/amazing-loader"
 
 // Sample data for charts
 const salesData = [
@@ -24,7 +27,13 @@ const categoryData = [
 ]
 
 export default function AdminDashboard() {
-  const [analytics, setAnalytics] = useState({
+  const [analytics, setAnalytics] = useState<{
+    totalProducts: number
+    totalOrders: number
+    totalUsers: number
+    totalRevenue: number
+    recentOrders: any[]
+  }>({
     totalProducts: 0,
     totalOrders: 0,
     totalUsers: 0,
@@ -32,10 +41,20 @@ export default function AdminDashboard() {
     recentOrders: [],
   })
   const [loading, setLoading] = useState(true)
+  const { user, loading: authLoading, isAdmin } = useAuth()
+  const router = useRouter()
 
   useEffect(() => {
-    loadAnalytics()
-  }, [])
+    // Redirect to login if not authenticated as admin
+    if (!authLoading && (!user || !isAdmin)) {
+      router.push("/admin/login")
+      return
+    }
+
+    if (user && isAdmin) {
+      loadAnalytics()
+    }
+  }, [user, authLoading, isAdmin, router])
 
   const loadAnalytics = async () => {
     try {
@@ -46,6 +65,20 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false)
     }
+  }
+
+  // Show loading while checking auth
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-900">
+        <AmazingLoader variant="fashion" size="xl" text="Loading admin panel..." />
+      </div>
+    )
+  }
+
+  // Don't render anything if not authenticated (will redirect)
+  if (!user || !isAdmin) {
+    return null
   }
 
   const getStatusColor = (status: string) => {
@@ -165,7 +198,7 @@ export default function AdminDashboard() {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"

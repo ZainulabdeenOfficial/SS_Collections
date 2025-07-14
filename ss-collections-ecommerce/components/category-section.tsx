@@ -4,12 +4,12 @@ import { Card, CardContent } from "@/components/ui/card"
 const categories = [
   {
     name: "Men's Fashion",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/placeholder.svg",
     href: "/products?category=men",
   },
   {
     name: "Women's Fashion",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/placeholder.svg",
     href: "/products?category=women",
   },
 ]

@@ -120,7 +120,7 @@ export default function WishlistPage() {
                 <div className="relative mb-4">
                   <Link href={`/products/${item.id}`}>
                     <Image
-                      src={item.images[0] || "/placeholder.svg?height=200&width=200"}
+                      src={item.images[0] || "/placeholder.svg"}
                       alt={item.name}
                       width={200}
                       height={200}

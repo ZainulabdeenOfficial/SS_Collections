@@ -5,7 +5,7 @@ let sql: any = null
 
 if (typeof window === "undefined") {
   const connectionString =
-    "postgresql://neondb_owner:npg_AMh4FDOBmis0@ep-frosty-hat-a8lgqa3j-pooler.eastus2.azure.neon.tech/neondb?sslmode=require&channel_binding=require"
+    process.env.NEON_DATABASE_URL || ""
 
   if (connectionString) {
     sql = neon(connectionString)
@@ -366,6 +366,56 @@ export class Database {
       await sql`DELETE FROM products WHERE id = ${id}`
     } catch (error) {
       console.error("Database error:", error)
+    }
+  }
+
+  static async getAnalytics(): Promise<{
+    totalProducts: number
+    totalOrders: number
+    totalUsers: number
+    totalRevenue: number
+    recentOrders: any[]
+  }> {
+    if (!sql) {
+      return {
+        totalProducts: 0,
+        totalOrders: 0,
+        totalUsers: 0,
+        totalRevenue: 0,
+        recentOrders: [],
+      }
+    }
+
+    try {
+      // Get total products
+      const productsResult = await sql`SELECT COUNT(*) as count FROM products`
+      const totalProducts = parseInt(productsResult[0]?.count || "0")
+
+      // Get total users
+      const usersResult = await sql`SELECT COUNT(*) as count FROM users`
+      const totalUsers = parseInt(usersResult[0]?.count || "0")
+
+      // Get orders and revenue (mock data for now since orders table might not exist)
+      const totalOrders = 0
+      const totalRevenue = 0
+      const recentOrders: any[] = []
+
+      return {
+        totalProducts,
+        totalOrders,
+        totalUsers,
+        totalRevenue,
+        recentOrders,
+      }
+    } catch (error) {
+      console.error("Database error:", error)
+      return {
+        totalProducts: 0,
+        totalOrders: 0,
+        totalUsers: 0,
+        totalRevenue: 0,
+        recentOrders: [],
+      }
     }
   }
 }
