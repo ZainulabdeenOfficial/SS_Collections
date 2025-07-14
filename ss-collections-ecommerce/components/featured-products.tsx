@@ -37,7 +37,7 @@ export function FeaturedProducts() {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.images[0] || "/placeholder.svg?height=400&width=400",
+      image: product.images[0] || "/placeholder.svg",
     })
   }
 
@@ -77,7 +77,7 @@ export function FeaturedProducts() {
               >
                 <div className="relative aspect-square overflow-hidden rounded-t-lg">
                   <img
-                    src={product.images[0] || "/placeholder.svg?height=400&width=400"}
+                    src={product.images[0] || "/placeholder.svg"}
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                   />
