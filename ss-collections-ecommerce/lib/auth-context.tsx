@@ -15,6 +15,7 @@ interface AuthContextType {
   isAdmin: boolean
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>
   signIn: (email: string, password: string) => Promise<{ error?: string }>
+  signUp: (email: string, password: string, metadata?: { full_name?: string; phone?: string }) => Promise<{ error?: string }>
   register: (
     email: string,
     password: string,
@@ -93,6 +94,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const signUp = async (email: string, password: string, metadata?: { full_name?: string; phone?: string }) => {
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          email, 
+          password, 
+          fullName: metadata?.full_name,
+          phone: metadata?.phone 
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setUser(data.user)
+        return {}
+      } else {
+        return { error: data.error }
+      }
+    } catch (error) {
+      return { error: "Network error" }
+    }
+  }
+
   const register = async (email: string, password: string, fullName?: string, phone?: string) => {
     try {
       const response = await fetch("/api/auth/register", {
@@ -123,7 +150,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  return <AuthContext.Provider value={{ user, loading, isAdmin, login, signIn, register, logout }}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={{ user, loading, isAdmin, login, signIn, signUp, register, logout }}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {

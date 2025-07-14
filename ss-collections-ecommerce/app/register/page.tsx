@@ -67,15 +67,15 @@ export default function RegisterPage() {
       if (error) {
         toast({
           title: "Registration Failed",
-          description: error.message,
+          description: error,
           variant: "destructive",
         })
       } else {
         toast({
           title: "Account Created Successfully!",
-          description: "Please check your email to verify your account.",
+          description: "Welcome to SS Collections!",
         })
-        router.push("/login")
+        router.push("/")
       }
     } catch (error) {
       toast({

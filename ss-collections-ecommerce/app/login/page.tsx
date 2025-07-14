@@ -34,7 +34,7 @@ export default function LoginPage() {
       if (error) {
         toast({
           title: "Login Failed",
-          description: error.message,
+          description: error,
           variant: "destructive",
         })
       } else {

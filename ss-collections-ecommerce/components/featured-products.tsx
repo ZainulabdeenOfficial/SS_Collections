@@ -105,7 +105,7 @@ export function FeaturedProducts() {
                     </div>
                     <span className="text-sm text-gray-600 ml-2">({product.reviews_count})</span>
                   </div>
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center space-x-2">
                       <span className="font-bold text-lg">{priceDisplay}</span>
                       {product.original_price && (
@@ -113,6 +113,25 @@ export function FeaturedProducts() {
                       )}
                     </div>
                   </div>
+                  
+                  {/* Available Sizes */}
+                  {product.sizes && product.sizes.length > 0 && (
+                    <div className="mb-3">
+                      <span className="text-sm text-gray-600">Available sizes: </span>
+                      <div className="flex gap-1 mt-1 flex-wrap">
+                        {product.sizes.map((sizeObj, index) => (
+                          <Badge 
+                            key={index} 
+                            variant="outline" 
+                            className="text-xs px-2 py-1 bg-gray-50 hover:bg-gray-100 border-gray-300"
+                          >
+                            {sizeObj.size}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
                   <div className="flex gap-2">
                     <Button
                       asChild

@@ -16,6 +16,7 @@ interface WishlistItem {
   images: string[]
   category: string
   is_on_sale: boolean
+  sizes?: Array<{ size: string; price: number }>
 }
 
 export default function WishlistPage() {
@@ -153,6 +154,24 @@ export default function WishlistPage() {
                   <Badge variant="outline" className="text-xs">
                     {item.category}
                   </Badge>
+
+                  {/* Available Sizes */}
+                  {item.sizes && item.sizes.length > 0 && (
+                    <div className="mt-2">
+                      <span className="text-sm text-gray-600">Available sizes: </span>
+                      <div className="flex gap-1 mt-1 flex-wrap">
+                        {item.sizes.map((sizeObj: { size: string; price: number }, index: number) => (
+                          <Badge 
+                            key={index} 
+                            variant="outline" 
+                            className="text-xs px-2 py-1 bg-gray-50 hover:bg-gray-100"
+                          >
+                            {sizeObj.size}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   <Button className="w-full mt-3" onClick={() => addToCart(item)}>
                     <ShoppingCart className="h-4 w-4 mr-2" />

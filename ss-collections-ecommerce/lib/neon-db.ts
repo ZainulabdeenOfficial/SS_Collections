@@ -418,4 +418,30 @@ export class Database {
       }
     }
   }
+
+  static async getAdminByEmail(email: string): Promise<any | null> {
+    if (!sql) return null
+    try {
+      const result = await sql`SELECT * FROM admins WHERE email = ${email} LIMIT 1`
+      return result[0] || null
+    } catch (error) {
+      console.error("Database error:", error)
+      return null
+    }
+  }
+
+  static async createAdmin(adminData: { email: string; password_hash: string; full_name?: string }): Promise<any | null> {
+    if (!sql) return null
+    try {
+      const result = await sql`
+        INSERT INTO admins (email, password_hash, full_name)
+        VALUES (${adminData.email}, ${adminData.password_hash}, ${adminData.full_name || null})
+        RETURNING *
+      `
+      return result[0] || null
+    } catch (error) {
+      console.error("Database error:", error)
+      return null
+    }
+  }
 }

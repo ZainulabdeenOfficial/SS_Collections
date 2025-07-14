@@ -394,12 +394,30 @@ export default function ProductsPage() {
                       <span className="text-sm text-muted-foreground">({product.reviews_count})</span>
                     </div>
 
-                    <div className="flex items-center gap-2 mb-4">
+                    <div className="flex items-center gap-2 mb-2">
                       <span className="text-xl font-bold">{priceDisplay}</span>
                       {product.original_price && (
                         <span className="text-sm text-muted-foreground line-through">Rs {product.original_price}</span>
                       )}
                     </div>
+
+                    {/* Available Sizes */}
+                    {product.sizes && product.sizes.length > 0 && (
+                      <div className="mb-3">
+                        <span className="text-sm text-muted-foreground">Available sizes: </span>
+                        <div className="flex gap-1 mt-1 flex-wrap">
+                          {product.sizes.map((sizeObj, index) => (
+                            <Badge 
+                              key={index} 
+                              variant="outline" 
+                              className="text-xs px-2 py-1 bg-gray-50 hover:bg-gray-100"
+                            >
+                              {sizeObj.size}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
                     {product.is_on_sale && product.original_price && (
                       <Badge className="absolute top-2 right-2 bg-red-500">
